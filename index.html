@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التطوع الحكومية</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <span>🤝</span>
+                    <span id="logo-text">منصة التطوع الحكومية</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showSection('home')" id="nav-home">الرئيسية</a></li>
+                    <li><a href="#" onclick="showSection('projects')" id="nav-projects">المشاريع</a></li>
+                    <li><a href="#" onclick="showSection('volunteers')" id="nav-volunteers">المتطوعون</a></li>
+                    <li><a href="#" onclick="showSection('register')" id="nav-register">التسجيل</a></li>
+                    <li><a href="#" onclick="showSection('dashboard')" id="nav-dashboard">لوحة التحكم</a></li>
+                    <li><a href="#" onclick="showSection('admin')" id="nav-admin">إدارة</a></li>
+                </ul>
+                <button class="lang-switch" onclick="toggleLanguage()" id="lang-btn">English</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <div id="home-section">
+        <section class="hero">
+            <div class="container">
+                <h1 id="hero-title">كن جزءاً من التغيير</h1>
+                <p id="hero-subtitle">انضم لآلاف المتطوعين وساهم في بناء مجتمع أفضل من خلال المشاريع الحكومية</p>
+                <a href="#" onclick="showSection('projects')" class="btn btn-primary" id="hero-btn">استكشف المشاريع</a>
+                
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span class="stat-number" id="total-volunteers-stat">0</span>
+                        <span class="stat-label" id="stat-volunteers">متطوع نشط</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="total-projects-stat">0</span>
+                        <span class="stat-label" id="stat-projects">مشروع متاح</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="total-hours-stat">0</span>
+                        <span class="stat-label" id="stat-hours">ساعة تطوع</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <h2 class="section-title" id="featured-title">المشاريع المميزة</h2>
+            <div class="projects-grid" id="featured-projects"></div>
+        </section>
+    </div>
+
+    <!-- Projects Section -->
+    <div id="projects-section" class="hidden">
+        <section class="container" style="padding-top: 120px;">
+            <h2 class="section-title" id="all-projects-title">جميع المشاريع المتاحة</h2>
+            
+            <div class="filter-bar">
+                <input type="text" id="search-input" placeholder="ابحث عن مشروع..." onkeyup="filterProjects()">
+                <select id="status-filter" onchange="filterProjects()">
+                    <option value="all">جميع الحالات</option>
+                    <option value="active">نشط</option>
+                    <option value="urgent">عاجل</option>
+                    <option value="completed">مكتمل</option>
+                </select>
+            </div>
+
+            <div class="projects-grid" id="all-projects"></div>
+        </section>
+    </div>
+
+    <!-- Volunteers Section -->
+    <div id="volunteers-section" class="hidden">
+        <section class="container" style="padding-top: 120px;">
+            <h2 class="section-title" id="volunteers-title">المتطوعون</h2>
+            
+            <div class="filter-bar">
+                <input type="text" id="volunteer-search" placeholder="ابحث عن متطوع..." onkeyup="filterVolunteers()">
+                <select id="volunteer-skill-filter" onchange="filterVolunteers()">
+                    <option value="all">جميع المهارات</option>
+                    <option value="teaching">تدريس</option>
+                    <option value="programming">برمجة</option>
+                    <option value="design">تصميم</option>
+                    <option value="writing">كتابة</option>
+                    <option value="management">إدارة</option>
+                </select>
+            </div>
+
+            <div class="volunteers-grid" id="volunteers-list"></div>
+        </section>
+    </div>
+
+    <!-- Registration Section -->
+    <div id="register-section" class="hidden">
+        <section class="container" style="padding-top: 120px;">
+            <h2 class="section-title" id="register-title">سجل كمتطوع</h2>
+            
+            <form class="registration-form" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <label id="label-name">الاسم الكامل</label>
+                    <input type="text" id="reg-name" required placeholder="أدخل اسمك الكامل">
+                </div>
+                
+                <div class="form-group">
+                    <label id="label-email">البريد الإلكتروني</label>
+                    <input type="email" id="reg-email" required placeholder="example@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label id="label-phone">رقم الهاتف</label>
+                    <input type="tel" id="reg-phone" required placeholder="+964 XXX XXX XXXX">
+                </div>
+                
+                <div class="form-group">
+                    <label id="label-age">العمر</label>
+                    <input type="number" id="reg-age" required min="16" placeholder="16+">
+                </div>
+                
+                <div class="form-group">
+                    <label id="label-education">المستوى التعليمي</label>
+                    <select id="reg-education" required>
+                        <option value="">اختر...</option>
+                        <option value="high-school">ثانوية</option>
+                        <option value="diploma">دبلوم</option>
+                        <option value="bachelor">بكالوريوس</option>
+                        <option value="master">ماجستير</option>
+                        <option value="phd">دكتوراه</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label id="label-skills">المهارات (اختر كل ما ينطبق)</label>
+                    <div class="checkbox-group" id="skills-checkboxes">
+                        <label><input type="checkbox" value="teaching"> <span>تدريس</span></label>
+                        <label><input type="checkbox" value="programming"> <span>برمجة</span></label>
+                        <label><input type="checkbox" value="design"> <span>تصميم</span></label>
+                        <label><input type="checkbox" value="writing"> <span>كتابة</span></label>
+                        <label><input type="checkbox" value="management"> <span>إدارة</span></label>
+                        <label><input type="checkbox" value="marketing"> <span>تسويق</span></label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label id="label-availability">الوقت المتاح (ساعات/أسبوع)</label>
+                    <input type="number" id="reg-availability" required min="1" placeholder="5">
+                </div>
+                
+                <button type="submit" class="btn btn-secondary" style="width: 100%;" id="submit-btn">تسجيل</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard-section" class="hidden">
+        <section class="container" style="padding-top: 120px;">
+            <h2 class="section-title" id="dashboard-title">لوحة التحكم - الإحصائيات العامة</h2>
+            
+            <div class="dashboard-cards">
+                <div class="dashboard-card">
+                    <h3>إجمالي المتطوعين</h3>
+                    <div class="dashboard-value" id="dash-total-volunteers">0</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>المشاريع النشطة</h3>
+                    <div class="dashboard-value" id="dash-active-projects">0</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>المشاريع المكتملة</h3>
+                    <div class="dashboard-value" id="dash-completed-projects">0</div>
+                </div>
+                <div class="dashboard-card">
+                    <h3>إجمالي ساعات التطوع</h3>
+                    <div class="dashboard-value" id="dash-total-hours">0</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Admin Section -->
+    <div id="admin-section" class="hidden">
+        <section class="container" style="padding-top: 120px;">
+            
+            <!-- Admin Login -->
+            <div id="admin-login" class="admin-login">
+                <div class="login-box">
+                    <h2>🔒 تسجيل دخول الإدارة</h2>
+                    <p>Admin Login</p>
+                    <form onsubmit="adminLogin(event)">
+                        <div class="form-group">
+                            <label>رمز الدخول / Access Code</label>
+                            <input type="password" id="admin-password" required placeholder="أدخل رمز الدخول">
+                        </div>
+                        <button type="submit" class="btn btn-secondary" style="width: 100%;">دخول / Login</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Admin Content (Hidden until login) -->
+            <div id="admin-content-area" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h2 class="section-title" style="margin: 0;">لوحة الإدارة</h2>
+                    <button class="btn btn-danger" onclick="adminLogout()">🚪 تسجيل خروج / Logout</button>
+                </div>
+            
+            <!-- Admin Tabs -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showAdminTab('projects-management')">إدارة المشاريع</button>
+                <button class="tab-btn" onclick="showAdminTab('volunteers-management')">إدارة المتطوعين</button>
+            </div>
+
+            <!-- Projects Management -->
+            <div id="projects-management" class="admin-content">
+                <div class="admin-header">
+                    <h3>إدارة المشاريع</h3>
+                    <button class="btn btn-primary" onclick="showAddProjectForm()">➕ إضافة مشروع جديد</button>
+                </div>
+
+                <!-- Add Project Form -->
+                <div id="add-project-form" class="admin-form hidden">
+                    <h4>إضافة مشروع جديد</h4>
+                    <form onsubmit="addProject(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>عنوان المشروع</label>
+                                <input type="text" id="project-title" required>
+                            </div>
+                            <div class="form-group">
+                                <label>الأيقونة (emoji)</label>
+                                <input type="text" id="project-icon" placeholder="📚" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>الوصف</label>
+                            <textarea id="project-desc" required rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>الحالة</label>
+                                <select id="project-status" required>
+                                    <option value="active">نشط</option>
+                                    <option value="urgent">عاجل</option>
+                                    <option value="completed">مكتمل</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>المدة</label>
+                                <input type="text" id="project-duration" placeholder="3 أشهر" required>
+                            </div>
+                            <div class="form-group">
+                                <label>عدد المتطوعين</label>
+                                <input type="number" id="project-volunteers" min="0" value="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>المهارات المطلوبة (افصل بفاصلة)</label>
+                            <input type="text" id="project-skills" placeholder="برمجة, تصميم" required>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-secondary">حفظ المشروع</button>
+                            <button type="button" class="btn" onclick="hideAddProjectForm()">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Projects Table -->
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>المشروع</th>
+                                <th>الحالة</th>
+                                <th>المتطوعين</th>
+                                <th>المدة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-projects-list"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Volunteers Management -->
+            <div id="volunteers-management" class="admin-content hidden">
+                <div class="admin-header">
+                    <h3>إدارة المتطوعين</h3>
+                </div>
+
+                <!-- Volunteers Table -->
+                <div class="admin-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>الهاتف</th>
+                                <th>المهارات</th>
+                                <th>الساعات المتاحة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-volunteers-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Edit Project Modal -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>تعديل المشروع</h3>
+            <form onsubmit="updateProject(event)">
+                <input type="hidden" id="edit-project-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>عنوان المشروع</label>
+                        <input type="text" id="edit-project-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>الأيقونة</label>
+                        <input type="text" id="edit-project-icon" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>الوصف</label>
+                    <textarea id="edit-project-desc" required rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>الحالة</label>
+                        <select id="edit-project-status" required>
+                            <option value="active">نشط</option>
+                            <option value="urgent">عاجل</option>
+                            <option value="completed">مكتمل</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>المدة</label>
+                        <input type="text" id="edit-project-duration" required>
+                    </div>
+                    <div class="form-group">
+                        <label>عدد المتطوعين</label>
+                        <input type="number" id="edit-project-volunteers" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>المهارات المطلوبة</label>
+                    <input type="text" id="edit-project-skills" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-secondary">حفظ التعديلات</button>
+                    <button type="button" class="btn" onclick="closeEditModal()">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>عن المنصة</h3>
+                    <p>منصة وطنية لربط المتطوعين بالمشاريع الحكومية وتسهيل عملية التطوع.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="#" onclick="showSection('home')">الرئيسية</a></li>
+                        <li><a href="#" onclick="showSection('projects')">المشاريع</a></li>
+                        <li><a href="#" onclick="showSection('volunteers')">المتطوعون</a></li>
+                        <li><a href="#" onclick="showSection('register')">التسجيل</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <p>info@volunteer.gov.iq</p>
+                    <p>+964 XXX XXX XXXX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 منصة التطوع الحكومية. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
