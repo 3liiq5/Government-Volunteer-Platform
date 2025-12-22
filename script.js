@@ -1,647 +1,605 @@
-// Initialize Data from localStorage or create default
-let projects = JSON.parse(localStorage.getItem('projects')) || [
-    {
-        id: 1,
-        icon: '📚',
-        title: 'برنامج محو الأمية الرقمية',
-        titleEn: 'Digital Literacy Program',
-        desc: 'تدريب كبار السن على استخدام التكنولوجيا والهواتف الذكية',
-        descEn: 'Training seniors on using technology and smartphones',
-        status: 'active',
-        volunteers: 24,
-        duration: '3 أشهر',
-        durationEn: '3 months',
-        skills: ['تدريس', 'تكنولوجيا']
-    },
-    {
-        id: 2,
-        icon: '🌳',
-        title: 'حملة زراعة الأشجار',
-        titleEn: 'Tree Planting Campaign',
-        desc: 'مبادرة لزراعة 10,000 شجرة في المناطق الحضرية',
-        descEn: 'Initiative to plant 10,000 trees in urban areas',
-        status: 'urgent',
-        volunteers: 156,
-        duration: '2 شهر',
-        durationEn: '2 months',
-        skills: ['عمل ميداني', 'بيئة']
-    },
-    {
-        id: 3,
-        icon: '💻',
-        title: 'تطوير منصة تعليمية',
-        titleEn: 'Educational Platform Development',
-        desc: 'بناء منصة إلكترونية لتعليم الطلاب عن بعد',
-        descEn: 'Building an e-learning platform for remote education',
-        status: 'active',
-        volunteers: 12,
-        duration: '6 أشهر',
-        durationEn: '6 months',
-        skills: ['برمجة', 'تصميم']
-    }
+// ================== منصة التطوع الحكومية 2026 ==================
+// بيانات أولية محفوظة في localStorage (بيانات وهمية واقعية)
+let projects = JSON.parse(localStorage.getItem("projects")) || [
+  {
+    id: 1,
+    icon: "📚",
+    title: "برنامج محو الأمية الرقمية",
+    titleEn: "Digital Literacy Program",
+    desc: "تدريب كبار السن على استخدام التكنولوجيا والهواتف الذكية",
+    descEn: "Training seniors on using technology and smartphones",
+    status: "active",
+    volunteers: 24,
+    duration: "3 أشهر",
+    durationEn: "3 months",
+    skills: ["تدريس", "تكنولوجيا"]
+  },
+  {
+    id: 2,
+    icon: "🌳",
+    title: "حملة زراعة الأشجار",
+    titleEn: "Tree Planting Campaign",
+    desc: "مبادرة لزراعة 10,000 شجرة في المناطق الحضرية",
+    descEn: "Initiate to plant 10,000 trees in urban areas",
+    status: "urgent",
+    volunteers: 156,
+    duration: "2 شهر",
+    durationEn: "2 months",
+    skills: ["عمل ميداني", "بيئة"]
+  },
+  {
+    id: 3,
+    icon: "💻",
+    title: "تطوير منصة تعليمية",
+    titleEn: "Educational Platform Development",
+    desc: "بناء منصة إلكترونية لتعليم الطلاب عن بعد",
+    descEn: "Building an e-learning platform for remote education",
+    status: "active",
+    volunteers: 12,
+    duration: "6 أشهر",
+    durationEn: "6 months",
+    skills: ["برمجة", "تصميم"]
+  }
 ];
 
-let volunteers = JSON.parse(localStorage.getItem('volunteers')) || [
-    {
-        id: 1,
-        name: 'أحمد محمد',
-        email: 'ahmed@email.com',
-        phone: '+964 750 123 4567',
-        age: 25,
-        education: 'bachelor',
-        skills: ['programming', 'design'],
-        availability: 10
-    },
-    {
-        id: 2,
-        name: 'سارة علي',
-        email: 'sara@email.com',
-        phone: '+964 770 234 5678',
-        age: 28,
-        education: 'master',
-        skills: ['teaching', 'management'],
-        availability: 8
-    }
+let volunteers = JSON.parse(localStorage.getItem("volunteers")) || [
+  {
+    id: 1,
+    name: "أحمد محمد",
+    email: "ahmed@email.com",
+    phone: "+964 750 123 4567",
+    age: 25,
+    education: "bachelor",
+    skills: ["programming", "design"],
+    availability: 10
+  },
+  {
+    id: 2,
+    name: "سارة علي",
+    email: "sara@email.com",
+    phone: "+964 770 234 5678",
+    age: 28,
+    education: "master",
+    skills: ["teaching", "management"],
+    availability: 8
+  }
 ];
 
-let currentLang = 'ar';
-let isAdminLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
-const ADMIN_PASSWORD = 'ali123'; // يمكنك تغيير الرمز من هنا
+// حالة التطبيق
+let currentLang = "ar";
+let isAdminLoggedIn = sessionStorage.getItem("adminLoggedIn") === "true";
+const ADMIN_PASSWORD = "ali123";
 
-// Save data to localStorage
+// ================== مساعدات ==================
 function saveData() {
-    localStorage.setItem('projects', JSON.stringify(projects));
-    localStorage.setItem('volunteers', JSON.stringify(volunteers));
+  localStorage.setItem("projects", JSON.stringify(projects));
+  localStorage.setItem("volunteers", JSON.stringify(volunteers));
 }
 
-// Language Toggle
+function $(id) {
+  return document.getElementById(id);
+}
+
+// ================== التبديل بين اللغات ==================
 function toggleLanguage() {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
-    const html = document.documentElement;
-    
-    if (currentLang === 'en') {
-        html.setAttribute('lang', 'en');
-        html.setAttribute('dir', 'ltr');
-        document.getElementById('lang-btn').textContent = 'العربية';
-    } else {
-        html.setAttribute('lang', 'ar');
-        html.setAttribute('dir', 'rtl');
-        document.getElementById('lang-btn').textContent = 'English';
-    }
-    
-    updateLanguage();
-    loadProjects();
-    loadVolunteers();
-    updateStats();
+  currentLang = currentLang === "ar" ? "en" : "ar";
+  const html = document.documentElement;
+  
+  if (currentLang === "en") {
+    html.setAttribute("lang", "en");
+    html.setAttribute("dir", "ltr");
+    if ($("lang-btn")) $("lang-btn").textContent = "العربية";
+  } else {
+    html.setAttribute("lang", "ar");
+    html.setAttribute("dir", "rtl");
+    if ($("lang-btn")) $("lang-btn").textContent = "English";
+  }
+  
+  updateLanguageTexts();
+  renderAll();
+  updateStats();
 }
 
-// Update all text based on language
-function updateLanguage() {
-    const translations = {
-        ar: {
-            'logo-text': 'منصة التطوع الحكومية',
-            'nav-home': 'الرئيسية',
-            'nav-projects': 'المشاريع',
-            'nav-volunteers': 'المتطوعون',
-            'nav-register': 'التسجيل',
-            'nav-dashboard': 'لوحة التحكم',
-            'nav-admin': 'إدارة',
-            'hero-title': 'كن جزءاً من التغيير',
-            'hero-subtitle': 'انضم لآلاف المتطوعين وساهم في بناء مجتمع أفضل من خلال المشاريع الحكومية',
-            'hero-btn': 'استكشف المشاريع',
-            'stat-volunteers': 'متطوع نشط',
-            'stat-projects': 'مشروع متاح',
-            'stat-hours': 'ساعة تطوع',
-            'featured-title': 'المشاريع المميزة',
-            'all-projects-title': 'جميع المشاريع المتاحة',
-            'volunteers-title': 'المتطوعون',
-            'register-title': 'سجل كمتطوع',
-            'dashboard-title': 'لوحة التحكم - الإحصائيات العامة',
-            'label-name': 'الاسم الكامل',
-            'label-email': 'البريد الإلكتروني',
-            'label-phone': 'رقم الهاتف',
-            'label-age': 'العمر',
-            'label-education': 'المستوى التعليمي',
-            'label-skills': 'المهارات (اختر كل ما ينطبق)',
-            'label-availability': 'الوقت المتاح (ساعات/أسبوع)',
-            'submit-btn': 'تسجيل'
-        },
-        en: {
-            'logo-text': 'Government Volunteer Platform',
-            'nav-home': 'Home',
-            'nav-projects': 'Projects',
-            'nav-volunteers': 'Volunteers',
-            'nav-register': 'Register',
-            'nav-dashboard': 'Dashboard',
-            'nav-admin': 'Admin',
-            'hero-title': 'Be Part of the Change',
-            'hero-subtitle': 'Join thousands of volunteers and contribute to building a better community',
-            'hero-btn': 'Explore Projects',
-            'stat-volunteers': 'Active Volunteers',
-            'stat-projects': 'Available Projects',
-            'stat-hours': 'Volunteer Hours',
-            'featured-title': 'Featured Projects',
-            'all-projects-title': 'All Available Projects',
-            'volunteers-title': 'Volunteers',
-            'register-title': 'Register as Volunteer',
-            'dashboard-title': 'Dashboard - General Statistics',
-            'label-name': 'Full Name',
-            'label-email': 'Email Address',
-            'label-phone': 'Phone Number',
-            'label-age': 'Age',
-            'label-education': 'Education Level',
-            'label-skills': 'Skills (Select all that apply)',
-            'label-availability': 'Available Time (hours/week)',
-            'submit-btn': 'Register'
-        }
-    };
-    
-    Object.keys(translations[currentLang]).forEach(key => {
-        const element = document.getElementById(key);
-        if (element) {
-            element.textContent = translations[currentLang][key];
-        }
-    });
+const translations = {
+  ar: {
+    "logo-text": "منصة التطوع الحكومية",
+    "nav-home": "الرئيسية",
+    "nav-projects": "المشاريع",
+    "nav-volunteers": "المتطوعون",
+    "nav-register": "التسجيل",
+    "hero-title": "كن جزءاً من التغيير",
+    "hero-subtitle": "انضم إلى شبكة من المتطوعين في مختلف المدن، واختر المشاريع التي تناسب مهاراتك ووقتك المتاح.",
+    "hero-btn": "استكشف المشاريع المتاحة",
+    "stat-volunteers": "متطوع نشط",
+    "stat-projects": "مشروع متاح",
+    "stat-hours": "ساعة تطوع",
+    "all-projects-title": "جميع المشاريع المتاحة",
+    "volunteers-title": "المتطوعون",
+    "register-title": "سجل كمتطوع",
+    "label-name": "الاسم الكامل",
+    "label-email": "البريد الإلكتروني",
+    "label-phone": "رقم الهاتف",
+    "label-age": "العمر",
+    "label-education": "المستوى التعليمي",
+    "label-skills": "المهارات (اختر كل ما ينطبق)",
+    "label-availability": "الوقت المتاح (ساعات/أسبوع)",
+    "submit-btn": "تسجيل"
+  },
+  en: {
+    "logo-text": "Government Volunteer Platform",
+    "nav-home": "Home",
+    "nav-projects": "Projects",
+    "nav-volunteers": "Volunteers",
+    "nav-register": "Register",
+    "hero-title": "Be Part of the Change",
+    "hero-subtitle": "Join a network of volunteers across cities and choose projects that match your skills and time.",
+    "hero-btn": "Explore Available Projects",
+    "stat-volunteers": "Active Volunteers",
+    "stat-projects": "Available Projects",
+    "stat-hours": "Volunteer Hours",
+    "all-projects-title": "All Available Projects",
+    "volunteers-title": "Volunteers",
+    "register-title": "Register as Volunteer",
+    "label-name": "Full Name",
+    "label-email": "Email Address",
+    "label-phone": "Phone Number",
+    "label-age": "Age",
+    "label-education": "Education Level",
+    "label-skills": "Skills (Select all that apply)",
+    "label-availability": "Available Time (hours/week)",
+    "submit-btn": "Register"
+  }
+};
+
+function updateLanguageTexts() {
+  const t = translations[currentLang];
+  Object.keys(t).forEach((key) => {
+    const el = $(key);
+    if (el) el.textContent = t[key];
+  });
 }
 
-// Create Project Card
+// ================== عرض المشاريع ==================
 function createProjectCard(project) {
-    const statusText = {
-        active: currentLang === 'ar' ? 'نشط' : 'Active',
-        urgent: currentLang === 'ar' ? 'عاجل' : 'Urgent',
-        completed: currentLang === 'ar' ? 'مكتمل' : 'Completed'
-    };
-    
-    const title = currentLang === 'ar' ? project.title : project.titleEn;
-    const desc = currentLang === 'ar' ? project.desc : project.descEn;
-    const duration = currentLang === 'ar' ? project.duration : project.durationEn;
-    const volunteerText = currentLang === 'ar' ? 'متطوع' : 'volunteers';
+  const statusText = {
+    active: currentLang === "ar" ? "نشط" : "Active",
+    urgent: currentLang === "ar" ? "عاجل" : "Urgent",
+    completed: currentLang === "ar" ? "مكتمل" : "Completed"
+  };
+  
+  const title = currentLang === "ar" ? project.title : project.titleEn;
+  const desc = currentLang === "ar" ? project.desc : project.descEn;
+  const duration = currentLang === "ar" ? project.duration : project.durationEn;
+  const volunteerLabel = currentLang === "ar" ? "متطوع" : "volunteers";
+  
+  const skillsHtml = project.skills
+    .map((s) => `<span class="skill-tag">${s}</span>`)
+    .join("");
+
+  return `
+    <article class="project-card" data-id="${project.id}">
+      <div class="project-header">
+        <div class="project-icon">${project.icon}</div>
+        <span class="project-status status-${project.status}">${statusText[project.status]}</span>
+      </div>
+      <h3 class="project-title">${title}</h3>
+      <p class="project-desc">${desc}</p>
+      <div class="project-skills">${skillsHtml}</div>
+      <div class="project-meta">
+        <span>${duration}</span>
+        <span>${project.volunteers} ${volunteerLabel}</span>
+      </div>
+    </article>
+  `;
+}
+
+function renderProjects() {
+  const allContainer = $("all-projects");
+  if (!allContainer) return;
+  
+  const statusFilter = $("status-filter")?.value || "all";
+  const searchValue = $("search-projects")?.value.toLowerCase() || "";
+  
+  const filtered = projects.filter((p) => {
+    const matchesStatus = statusFilter === "all" || p.status === statusFilter;
+    const sourceTitle = currentLang === "ar" ? p.title : p.titleEn;
+    const text = (sourceTitle + " " + p.desc + " " + p.descEn).toLowerCase();
+    const matchesText = text.includes(searchValue);
+    return matchesStatus && matchesText;
+  });
+  
+  allContainer.innerHTML = filtered.map(createProjectCard).join("");
+  
+  // Admin table
+  const adminTable = $("projects-admin-table");
+  if (adminTable) {
+    adminTable.innerHTML = "";
+    projects.forEach((p) => {
+      const statusText = {
+        active: currentLang === "ar" ? "نشط" : "Active",
+        urgent: currentLang === "ar" ? "عاجل" : "Urgent",
+        completed: currentLang === "ar" ? "مكتمل" : "Completed"
+      };
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${p.icon}</td>
+        <td>${currentLang === "ar" ? p.title : p.titleEn}</td>
+        <td>${statusText[p.status]}</td>
+        <td>${p.volunteers}</td>
+        <td>${currentLang === "ar" ? p.duration : p.durationEn}</td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-edit" data-id="${p.id}">تعديل</button>
+            <button class="btn-delete" data-id="${p.id}">حذف</button>
+          </div>
+        </td>
+      `;
+      adminTable.appendChild(row);
+    });
+  }
+}
+
+// ================== عرض المتطوعين ==================
+function renderVolunteers() {
+  const list = $("volunteers-list");
+  if (!list) return;
+  
+  const skillFilter = $("skill-filter")?.value || "all";
+  
+  const filtered = volunteers.filter((v) =>
+    skillFilter === "all" ? true : v.skills.includes(skillFilter)
+  );
+  
+  list.innerHTML = filtered.map((v) => {
+    const initials = v.name[0];
+    const skillsHtml = v.skills
+      .map((s) => `<span class="skill-tag">${s}</span>`)
+      .join("");
     
     return `
-        <div class="project-card">
-            <div class="project-header">
-                <div class="project-icon">${project.icon}</div>
-                <span class="project-status status-${project.status}">${statusText[project.status]}</span>
-            </div>
-            <h3 class="project-title">${title}</h3>
-            <p class="project-desc">${desc}</p>
-            <div class="project-skills">
-                ${project.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
-            </div>
-            <div class="project-meta">
-                <span>👥 ${project.volunteers} ${volunteerText}</span>
-                <span>⏱️ ${duration}</span>
-            </div>
+      <article class="volunteer-card">
+        <div class="volunteer-avatar">${initials}</div>
+        <h3 class="volunteer-name">${v.name}</h3>
+        <p class="volunteer-email">${v.email}</p>
+        <div class="volunteer-info">
+          <span>${v.age}</span>
+          <span>${v.availability} ساعة</span>
         </div>
+        <div class="volunteer-skills">${skillsHtml}</div>
+      </article>
     `;
-}
-
-// Load Projects
-function loadProjects() {
-    const featuredContainer = document.getElementById('featured-projects');
-    const allContainer = document.getElementById('all-projects');
-    
-    if (featuredContainer) {
-        featuredContainer.innerHTML = projects.slice(0, 3).map(createProjectCard).join('');
-    }
-    
-    if (allContainer) {
-        allContainer.innerHTML = projects.map(createProjectCard).join('');
-    }
-    
-    loadAdminProjects();
-}
-
-// Filter Projects
-function filterProjects() {
-    const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    const statusFilter = document.getElementById('status-filter').value;
-    
-    const filtered = projects.filter(project => {
-        const matchSearch = project.title.toLowerCase().includes(searchTerm) || 
-                          project.titleEn.toLowerCase().includes(searchTerm);
-        const matchStatus = statusFilter === 'all' || project.status === statusFilter;
-        return matchSearch && matchStatus;
+  }).join("");
+  
+  // Admin table
+  const adminTable = $("volunteers-admin-table");
+  if (adminTable) {
+    adminTable.innerHTML = "";
+    volunteers.forEach((v) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${v.name}</td>
+        <td>${v.email}</td>
+        <td>${v.phone}</td>
+        <td>${v.skills.join(", ")}</td>
+        <td>${v.availability}</td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-delete" data-vid="${v.id}">حذف</button>
+          </div>
+        </td>
+      `;
+      adminTable.appendChild(row);
     });
-    
-    const allContainer = document.getElementById('all-projects');
-    if (allContainer) {
-        allContainer.innerHTML = filtered.map(createProjectCard).join('');
-    }
+  }
 }
 
-// Create Volunteer Card
-function createVolunteerCard(volunteer) {
-    const skillsMap = {
-        teaching: currentLang === 'ar' ? 'تدريس' : 'Teaching',
-        programming: currentLang === 'ar' ? 'برمجة' : 'Programming',
-        design: currentLang === 'ar' ? 'تصميم' : 'Design',
-        writing: currentLang === 'ar' ? 'كتابة' : 'Writing',
-        management: currentLang === 'ar' ? 'إدارة' : 'Management',
-        marketing: currentLang === 'ar' ? 'تسويق' : 'Marketing'
-    };
-    
-    const initial = volunteer.name.charAt(0);
-    const hoursText = currentLang === 'ar' ? 'ساعة/أسبوع' : 'hours/week';
-    
-    return `
-        <div class="volunteer-card">
-            <div class="volunteer-avatar">${initial}</div>
-            <div class="volunteer-name">${volunteer.name}</div>
-            <div class="volunteer-email">${volunteer.email}</div>
-            <div class="volunteer-skills">
-                ${volunteer.skills.map(skill => 
-                    `<span class="skill-tag">${skillsMap[skill] || skill}</span>`
-                ).join('')}
-            </div>
-            <div class="volunteer-info">
-                <span>📞 ${volunteer.phone}</span>
-                <span>⏱️ ${volunteer.availability} ${hoursText}</span>
-            </div>
-        </div>
-    `;
-}
-
-// Load Volunteers
-function loadVolunteers() {
-    const container = document.getElementById('volunteers-list');
-    if (container) {
-        container.innerHTML = volunteers.map(createVolunteerCard).join('');
-    }
-    loadAdminVolunteers();
-}
-
-// Filter Volunteers
-function filterVolunteers() {
-    const searchTerm = document.getElementById('volunteer-search').value.toLowerCase();
-    const skillFilter = document.getElementById('volunteer-skill-filter').value;
-    
-    const filtered = volunteers.filter(volunteer => {
-        const matchSearch = volunteer.name.toLowerCase().includes(searchTerm) || 
-                          volunteer.email.toLowerCase().includes(searchTerm);
-        const matchSkill = skillFilter === 'all' || volunteer.skills.includes(skillFilter);
-        return matchSearch && matchSkill;
-    });
-    
-    const container = document.getElementById('volunteers-list');
-    if (container) {
-        container.innerHTML = filtered.map(createVolunteerCard).join('');
-    }
-}
-
-// Update Statistics
+// ================== الإحصائيات ==================
 function updateStats() {
-    const totalVolunteers = volunteers.length;
-    const totalProjects = projects.length;
-    const activeProjects = projects.filter(p => p.status === 'active' || p.status === 'urgent').length;
-    const completedProjects = projects.filter(p => p.status === 'completed').length;
-    const totalHours = volunteers.reduce((sum, v) => sum + v.availability, 0) * 4; // 4 weeks
-    
-    // Hero Stats
-    const heroVolunteers = document.getElementById('total-volunteers-stat');
-    const heroProjects = document.getElementById('total-projects-stat');
-    const heroHours = document.getElementById('total-hours-stat');
-    
-    if (heroVolunteers) heroVolunteers.textContent = totalVolunteers;
-    if (heroProjects) heroProjects.textContent = totalProjects;
-    if (heroHours) heroHours.textContent = totalHours;
-    
-    // Dashboard Stats
-    const dashVolunteers = document.getElementById('dash-total-volunteers');
-    const dashActive = document.getElementById('dash-active-projects');
-    const dashCompleted = document.getElementById('dash-completed-projects');
-    const dashHours = document.getElementById('dash-total-hours');
-    
-    if (dashVolunteers) dashVolunteers.textContent = totalVolunteers;
-    if (dashActive) dashActive.textContent = activeProjects;
-    if (dashCompleted) dashCompleted.textContent = completedProjects;
-    if (dashHours) dashHours.textContent = totalHours;
+  const totalVolunteers = volunteers.length;
+  const totalProjects = projects.length;
+  const activeProjects = projects.filter((p) => p.status === "active").length;
+  const completedProjects = projects.filter((p) => p.status === "completed").length;
+  const totalHours = volunteers.reduce((sum, v) => sum + Number(v.availability), 0);
+  
+  // Landing stats
+  if ($("total-volunteers")) $("total-volunteers").textContent = totalVolunteers;
+  if ($("total-projects")) $("total-projects").textContent = totalProjects;
+  if ($("total-hours")) $("total-hours").textContent = totalHours;
+  
+  // Dashboard stats
+  if ($("dash-total-volunteers")) $("dash-total-volunteers").textContent = totalVolunteers;
+  if ($("dash-active-projects")) $("dash-active-projects").textContent = activeProjects;
+  if ($("dash-completed-projects")) $("dash-completed-projects").textContent = completedProjects;
+  if ($("dash-total-hours")) $("dash-total-hours").textContent = totalHours;
 }
 
-// Show Section
-function showSection(section) {
-    document.getElementById('home-section').classList.add('hidden');
-    document.getElementById('projects-section').classList.add('hidden');
-    document.getElementById('volunteers-section').classList.add('hidden');
-    document.getElementById('register-section').classList.add('hidden');
-    document.getElementById('dashboard-section').classList.add('hidden');
-    document.getElementById('admin-section').classList.add('hidden');
-    
-    document.getElementById(section + '-section').classList.remove('hidden');
-    window.scrollTo(0, 0);
-    
-    // Check admin access when navigating to admin section
-    if (section === 'admin') {
-        checkAdminAccess();
-    }
+// ================== تسجيل متطوع جديد ==================
+function handleRegister(e) {
+  e.preventDefault();
+  
+  const name = $("name").value.trim();
+  const email = $("email").value.trim();
+  const phone = $("phone").value.trim();
+  const age = Number($("age").value);
+  const education = $("education").value;
+  const availability = Number($("availability").value);
+  const skills = Array.from(
+    document.querySelectorAll("#landing-register .checkbox-grid input[type='checkbox']:checked")
+  ).map((c) => c.value);
+  
+  if (!name || !email || !phone || !education || !availability) {
+    alert("يرجى ملء جميع الحقول الإجبارية");
+    return;
+  }
+  
+  const newVolunteer = {
+    id: Date.now(),
+    name,
+    email,
+    phone,
+    age,
+    education,
+    skills,
+    availability
+  };
+  
+  volunteers.push(newVolunteer);
+  saveData();
+  $("register-form").reset();
+  renderVolunteers();
+  updateStats();
+  alert("تم تسجيلك بنجاح! شكراً لتطوعك معنا 🇮🇶");
 }
 
-// Admin Login Functions
-function checkAdminAccess() {
-    const loginBox = document.getElementById('admin-login');
-    const contentArea = document.getElementById('admin-content-area');
-    
-    if (isAdminLoggedIn) {
-        loginBox.classList.add('hidden');
-        contentArea.classList.remove('hidden');
-    } else {
-        loginBox.classList.remove('hidden');
-        contentArea.classList.add('hidden');
-    }
+// ================== لوحة الإدارة ==================
+function updateAdminUI() {
+  const loginBlock = $("admin-login-section");
+  const panelBlock = $("admin-panel");
+  
+  if (!loginBlock || !panelBlock) return;
+  
+  if (isAdminLoggedIn) {
+    loginBlock.classList.add("hidden");
+    panelBlock.classList.remove("hidden");
+  } else {
+    loginBlock.classList.remove("hidden");
+    panelBlock.classList.add("hidden");
+  }
 }
 
-function adminLogin(event) {
-    event.preventDefault();
-    const password = document.getElementById('admin-password').value;
-    
-    if (password === ADMIN_PASSWORD) {
-        isAdminLoggedIn = true;
-        sessionStorage.setItem('adminLoggedIn', 'true');
-        
-        alert(currentLang === 'ar' ? 
-            '✅ تم تسجيل الدخول بنجاح!' : 
-            '✅ Login successful!');
-        
-        document.getElementById('admin-password').value = '';
-        checkAdminAccess();
-    } else {
-        alert(currentLang === 'ar' ? 
-            '❌ رمز الدخول غير صحيح!' : 
-            '❌ Incorrect access code!');
-    }
+function handleAdminLogin() {
+  const pwd = $("admin-password")?.value.trim();
+  if (pwd === ADMIN_PASSWORD) {
+    isAdminLoggedIn = true;
+    sessionStorage.setItem("adminLoggedIn", "true");
+    $("admin-password").value = "";
+    updateAdminUI();
+    alert("✅ تم تسجيل الدخول بنجاح!");
+  } else {
+    alert("❌ رمز الدخول غير صحيح");
+  }
 }
 
-function adminLogout() {
-    const confirmText = currentLang === 'ar' ? 
-        'هل تريد تسجيل الخروج؟' : 
-        'Do you want to logout?';
-    
-    if (confirm(confirmText)) {
-        isAdminLoggedIn = false;
-        sessionStorage.removeItem('adminLoggedIn');
-        
-        alert(currentLang === 'ar' ? 
-            '👋 تم تسجيل الخروج بنجاح!' : 
-            '👋 Logout successful!');
-        
-        showSection('home');
-    }
+function handleAdminLogout() {
+  isAdminLoggedIn = false;
+  sessionStorage.removeItem("adminLoggedIn");
+  updateAdminUI();
+  alert("👋 تم تسجيل الخروج");
 }
 
-// Registration Handler
-function handleRegistration(event) {
-    event.preventDefault();
-    
-    const name = document.getElementById('reg-name').value;
-    const email = document.getElementById('reg-email').value;
-    const phone = document.getElementById('reg-phone').value;
-    const age = parseInt(document.getElementById('reg-age').value);
-    const education = document.getElementById('reg-education').value;
-    const availability = parseInt(document.getElementById('reg-availability').value);
-    
-    const skills = [];
-    document.querySelectorAll('#skills-checkboxes input:checked').forEach(checkbox => {
-        skills.push(checkbox.value);
-    });
-    
-    const newVolunteer = {
-        id: volunteers.length > 0 ? Math.max(...volunteers.map(v => v.id)) + 1 : 1,
-        name,
-        email,
-        phone,
-        age,
-        education,
-        skills,
-        availability
-    };
-    
-    volunteers.push(newVolunteer);
-    saveData();
-    
-    alert(currentLang === 'ar' ? 'تم التسجيل بنجاح! 🎉' : 'Registration successful! 🎉');
-    event.target.reset();
-    loadVolunteers();
-    updateStats();
-    showSection('dashboard');
+// ================== CRUD المشاريع ==================
+let editingProjectId = null;
+
+function openProjectForm(editId = null) {
+  editingProjectId = editId;
+  const section = $("project-form-section");
+  if (!section) return;
+  
+  section.classList.remove("hidden");
+  
+  if (editId) {
+    const p = projects.find((x) => x.id == editId);
+    $("project-form-title").textContent = "تعديل مشروع";
+    $("project-icon").value = p.icon;
+    $("project-title").value = p.title;
+    $("project-desc").value = p.desc;
+    $("project-status").value = p.status;
+    $("project-duration").value = p.duration;
+    $("project-volunteers").value = p.volunteers;
+    $("project-skills").value = p.skills.join(",");
+  } else {
+    $("project-form-title").textContent = "مشروع جديد";
+    $("project-icon").value = "";
+    $("project-title").value = "";
+    $("project-desc").value = "";
+    $("project-status").value = "active";
+    $("project-duration").value = "";
+    $("project-volunteers").value = "";
+    $("project-skills").value = "";
+  }
 }
 
-// Admin Functions
-function showAdminTab(tab) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-    
-    document.getElementById('projects-management').classList.add('hidden');
-    document.getElementById('volunteers-management').classList.add('hidden');
-    document.getElementById(tab).classList.remove('hidden');
+function closeProjectForm() {
+  editingProjectId = null;
+  const section = $("project-form-section");
+  if (section) section.classList.add("hidden");
 }
 
-function showAddProjectForm() {
-    document.getElementById('add-project-form').classList.remove('hidden');
-}
-
-function hideAddProjectForm() {
-    document.getElementById('add-project-form').classList.add('hidden');
-}
-
-// Add Project
-function addProject(event) {
-    event.preventDefault();
-    
-    const title = document.getElementById('project-title').value;
-    const icon = document.getElementById('project-icon').value;
-    const desc = document.getElementById('project-desc').value;
-    const status = document.getElementById('project-status').value;
-    const duration = document.getElementById('project-duration').value;
-    const volunteersCount = parseInt(document.getElementById('project-volunteers').value);
-    const skillsInput = document.getElementById('project-skills').value;
-    const skills = skillsInput.split(',').map(s => s.trim());
-    
+function saveProjectFromForm() {
+  const titleAr = $("project-title").value.trim();
+  const icon = $("project-icon").value.trim();
+  const descAr = $("project-desc").value.trim();
+  const status = $("project-status").value;
+  const durationAr = $("project-duration").value.trim();
+  const volunteersCount = Number($("project-volunteers").value) || 0;
+  const skills = $("project-skills")
+    .value.split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  
+  if (!titleAr || !descAr) {
+    alert("يرجى ملء اسم ووصف المشروع");
+    return;
+  }
+  
+  if (editingProjectId) {
+    const p = projects.find((x) => x.id == editingProjectId);
+    p.title = titleAr;
+    p.titleEn = titleAr; // Simplified
+    p.icon = icon;
+    p.desc = descAr;
+    p.descEn = descAr;
+    p.status = status;
+    p.duration = durationAr;
+    p.durationEn = durationAr;
+    p.volunteers = volunteersCount;
+    p.skills = skills;
+  } else {
     const newProject = {
-        id: projects.length > 0 ? Math.max(...projects.map(p => p.id)) + 1 : 1,
-        icon,
-        title,
-        titleEn: title, // In real app, would translate
-        desc,
-        descEn: desc, // In real app, would translate
-        status,
-        volunteers: volunteersCount,
-        duration,
-        durationEn: duration, // In real app, would translate
-        skills
+      id: Date.now(),
+      icon,
+      title: titleAr,
+      titleEn: titleAr,
+      desc: descAr,
+      descEn: descAr,
+      status,
+      volunteers: volunteersCount,
+      duration: durationAr,
+      durationEn: durationAr,
+      skills
     };
-    
     projects.push(newProject);
-    saveData();
-    
-    alert(currentLang === 'ar' ? 'تم إضافة المشروع بنجاح! ✅' : 'Project added successfully! ✅');
-    event.target.reset();
-    hideAddProjectForm();
-    loadProjects();
-    updateStats();
+  }
+  
+  saveData();
+  closeProjectForm();
+  renderProjects();
+  updateStats();
 }
 
-// Load Admin Projects Table
-function loadAdminProjects() {
-    const container = document.getElementById('admin-projects-list');
-    if (!container) return;
-    
-    const statusText = {
-        active: currentLang === 'ar' ? 'نشط' : 'Active',
-        urgent: currentLang === 'ar' ? 'عاجل' : 'Urgent',
-        completed: currentLang === 'ar' ? 'مكتمل' : 'Completed'
-    };
-    
-    const editText = currentLang === 'ar' ? '✏️ تعديل' : '✏️ Edit';
-    const deleteText = currentLang === 'ar' ? '🗑️ حذف' : '🗑️ Delete';
-    
-    container.innerHTML = projects.map(project => {
-        const title = currentLang === 'ar' ? project.title : project.titleEn;
-        const duration = currentLang === 'ar' ? project.duration : project.durationEn;
-        
-        return `
-            <tr>
-                <td>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 24px;">${project.icon}</span>
-                        <span>${title}</span>
-                    </div>
-                </td>
-                <td><span class="project-status status-${project.status}">${statusText[project.status]}</span></td>
-                <td>${project.volunteers}</td>
-                <td>${duration}</td>
-                <td>
-                    <div class="action-btns">
-                        <button class="btn-edit" onclick="editProject(${project.id})">${editText}</button>
-                        <button class="btn-delete" onclick="deleteProject(${project.id})">${deleteText}</button>
-                    </div>
-                </td>
-            </tr>
-        `;
-    }).join('');
-}
-
-// Edit Project
-function editProject(id) {
-    const project = projects.find(p => p.id === id);
-    if (!project) return;
-    
-    document.getElementById('edit-project-id').value = project.id;
-    document.getElementById('edit-project-title').value = project.title;
-    document.getElementById('edit-project-icon').value = project.icon;
-    document.getElementById('edit-project-desc').value = project.desc;
-    document.getElementById('edit-project-status').value = project.status;
-    document.getElementById('edit-project-duration').value = project.duration;
-    document.getElementById('edit-project-volunteers').value = project.volunteers;
-    document.getElementById('edit-project-skills').value = project.skills.join(', ');
-    
-    document.getElementById('edit-modal').classList.remove('hidden');
-}
-
-// Update Project
-function updateProject(event) {
-    event.preventDefault();
-    
-    const id = parseInt(document.getElementById('edit-project-id').value);
-    const projectIndex = projects.findIndex(p => p.id === id);
-    
-    if (projectIndex === -1) return;
-    
-    projects[projectIndex].title = document.getElementById('edit-project-title').value;
-    projects[projectIndex].titleEn = document.getElementById('edit-project-title').value;
-    projects[projectIndex].icon = document.getElementById('edit-project-icon').value;
-    projects[projectIndex].desc = document.getElementById('edit-project-desc').value;
-    projects[projectIndex].descEn = document.getElementById('edit-project-desc').value;
-    projects[projectIndex].status = document.getElementById('edit-project-status').value;
-    projects[projectIndex].duration = document.getElementById('edit-project-duration').value;
-    projects[projectIndex].durationEn = document.getElementById('edit-project-duration').value;
-    projects[projectIndex].volunteers = parseInt(document.getElementById('edit-project-volunteers').value);
-    projects[projectIndex].skills = document.getElementById('edit-project-skills').value.split(',').map(s => s.trim());
-    
-    saveData();
-    closeEditModal();
-    
-    alert(currentLang === 'ar' ? 'تم تحديث المشروع بنجاح! ✅' : 'Project updated successfully! ✅');
-    loadProjects();
-    updateStats();
-}
-
-function closeEditModal() {
-    document.getElementById('edit-modal').classList.add('hidden');
-}
-
-// Delete Project
-function deleteProject(id) {
-    const confirmText = currentLang === 'ar' ? 
-        'هل أنت متأكد من حذف هذا المشروع؟' : 
-        'Are you sure you want to delete this project?';
-    
-    if (confirm(confirmText)) {
-        projects = projects.filter(p => p.id !== id);
-        saveData();
-        
-        alert(currentLang === 'ar' ? 'تم حذف المشروع بنجاح! ✅' : 'Project deleted successfully! ✅');
-        loadProjects();
-        updateStats();
+function handleProjectsAdminClick(e) {
+  const editBtn = e.target.closest(".btn-edit");
+  const deleteBtn = e.target.closest(".btn-delete");
+  
+  if (editBtn) {
+    const id = Number(editBtn.dataset.id);
+    openProjectForm(id);
+  }
+  
+  if (deleteBtn) {
+    const id = Number(deleteBtn.dataset.id);
+    if (confirm("هل أنت متأكد من حذف هذا المشروع؟")) {
+      projects = projects.filter((p) => p.id !== id);
+      saveData();
+      renderProjects();
+      updateStats();
     }
+  }
 }
 
-// Load Admin Volunteers Table
-function loadAdminVolunteers() {
-    const container = document.getElementById('admin-volunteers-list');
-    if (!container) return;
-    
-    const deleteText = currentLang === 'ar' ? '🗑️ حذف' : '🗑️ Delete';
-    
-    const skillsMap = {
-        teaching: currentLang === 'ar' ? 'تدريس' : 'Teaching',
-        programming: currentLang === 'ar' ? 'برمجة' : 'Programming',
-        design: currentLang === 'ar' ? 'تصميم' : 'Design',
-        writing: currentLang === 'ar' ? 'كتابة' : 'Writing',
-        management: currentLang === 'ar' ? 'إدارة' : 'Management',
-        marketing: currentLang === 'ar' ? 'تسويق' : 'Marketing'
-    };
-    
-    container.innerHTML = volunteers.map(volunteer => `
-        <tr>
-            <td>${volunteer.name}</td>
-            <td>${volunteer.email}</td>
-            <td>${volunteer.phone}</td>
-            <td>
-                <div style="display: flex; gap: 5px; flex-wrap: wrap;">
-                    ${volunteer.skills.map(skill => 
-                        `<span class="skill-tag">${skillsMap[skill] || skill}</span>`
-                    ).join('')}
-                </div>
-            </td>
-            <td>${volunteer.availability}</td>
-            <td>
-                <button class="btn-delete" onclick="deleteVolunteer(${volunteer.id})">${deleteText}</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-// Delete Volunteer
-function deleteVolunteer(id) {
-    const confirmText = currentLang === 'ar' ? 
-        'هل أنت متأكد من حذف هذا المتطوع؟' : 
-        'Are you sure you want to delete this volunteer?';
-    
-    if (confirm(confirmText)) {
-        volunteers = volunteers.filter(v => v.id !== id);
-        saveData();
-        
-        alert(currentLang === 'ar' ? 'تم حذف المتطوع بنجاح! ✅' : 'Volunteer deleted successfully! ✅');
-        loadVolunteers();
-        updateStats();
-    }
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadProjects();
-    loadVolunteers();
+function handleVolunteersAdminClick(e) {
+  const deleteBtn = e.target.closest(".btn-delete");
+  if (!deleteBtn || !deleteBtn.dataset.vid) return;
+  
+  const id = Number(deleteBtn.dataset.vid);
+  if (confirm("هل أنت متأكد من حذف هذا المتطوع؟")) {
+    volunteers = volunteers.filter((v) => v.id !== id);
+    saveData();
+    renderVolunteers();
     updateStats();
-    updateLanguage();
-    checkAdminAccess();
+  }
+}
+
+// ================== لوحة التحكم ==================
+function setupDashboardTabs() {
+  const dashLinks = document.querySelectorAll(".dash-link");
+  const dashTabs = document.querySelectorAll(".dash-tab");
+  
+  dashLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      dashLinks.forEach((l) => l.classList.remove("active"));
+      link.classList.add("active");
+      
+      const id = link.dataset.tab;
+      dashTabs.forEach((t) => t.classList.add("hidden"));
+      const tab = $(id);
+      if (tab) tab.classList.remove("hidden");
+    });
+  });
+}
+
+function setupDashboardOverlay() {
+  const overlay = $("dashboard-overlay");
+  if (!overlay) return;
+  
+  const openBtns = document.querySelectorAll("#open-dashboard");
+  const closeBtn = $("close-dashboard");
+  
+  openBtns.forEach((btn) => {
+    if (btn) {
+      btn.addEventListener("click", () => {
+        overlay.classList.add("show");
+        overlay.classList.remove("hidden");
+      });
+    }
+  });
+
+  
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      overlay.classList.remove("show");
+      setTimeout(() => overlay.classList.add("hidden"), 400);
+    });
+  }
+  
+  // Close on overlay click
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove("show");
+      setTimeout(() => overlay.classList.add("hidden"), 400);
+    }
+  });
+}
+
+// ================== التهيئة ==================
+function renderAll() {
+  renderProjects();
+  renderVolunteers();
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  // Load language
+  const savedLang = localStorage.getItem("ea_lang") || "ar";
+  currentLang = savedLang;
+  toggleLanguage(); // Apply saved language
+  
+  // Event listeners
+  if ($("lang-btn")) $("lang-btn").addEventListener("click", toggleLanguage);
+  if ($("status-filter")) $("status-filter").addEventListener("change", renderProjects);
+  if ($("search-projects")) $("search-projects").addEventListener("input", renderProjects);
+  if ($("skill-filter")) $("skill-filter").addEventListener("change", renderVolunteers);
+  if ($("register-form")) $("register-form").addEventListener("submit", handleRegister);
+  if ($("admin-login-btn")) $("admin-login-btn").addEventListener("click", handleAdminLogin);
+  if ($("admin-logout-btn")) $("admin-logout-btn").addEventListener("click", handleAdminLogout);
+  
+  // Admin features
+  if ($("add-project-btn")) $("add-project-btn").addEventListener("click", () => openProjectForm(null));
+  if ($("cancel-project-btn")) $("cancel-project-btn").addEventListener("click", closeProjectForm);
+  if ($("save-project-btn")) $("save-project-btn").addEventListener("click", saveProjectFromForm);
+  
+  if ($("projects-admin-table")) {
+    $("projects-admin-table").addEventListener("click", handleProjectsAdminClick);
+  }
+  if ($("volunteers-admin-table")) {
+    $("volunteers-admin-table").addEventListener("click", handleVolunteersAdminClick);
+  }
+  
+  // Dashboard
+  setupDashboardOverlay();
+  setupDashboardTabs();
+  
+  // Initial render
+  renderAll();
+  updateStats();
+  updateAdminUI();
 });
